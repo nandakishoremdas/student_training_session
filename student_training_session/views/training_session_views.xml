@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_training_session_form" model="ir.ui.view">
+        <field name="name">student.training.session.form</field>
+        <field name="model">student.training.session</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start_session"
+                            string="Start Session"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="stage != 'draft' or is_user_trainer == False"/>
+                    <button name="action_complete_session"
+                            string="Complete"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="stage != 'ongoing' or is_user_trainer == False"/>
+                    <button name="action_cancel_session"
+                            string="Cancel"
+                            type="object"
+                            invisible="stage in ['completed', 'cancelled'] or is_user_trainer == False"/>
+                    <field name="stage" widget="statusbar" statusbar_visible="draft, ongoing, completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_attendances"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-calendar-check-o"
+                                invisible="stage == 'draft'">
+                            <field name="attendance_count" widget="statinfo" string="Attendances"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="trainer_id" readonly="stage != 'draft'"/>
+                            <field name="is_user_trainer" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="start_date" readonly="stage != 'draft'"/>
+                            <field name="end_date" readonly="stage != 'draft'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Students">
+                            <field name="student_ids" readonly="stage != 'draft'">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="phone"/>
+                                    <field name="email"/>
+                                    <field name="city"/>
+                                    <field name="country_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Attendance" invisible="stage == 'draft'">
+                            <field name="attendance_ids" readonly="stage == 'completed'">
+                                <list editable="bottom" create="false" delete="false">
+                                    <field name="date" readonly="1"/>
+                                    <field name="student_id" readonly="1"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_training_session_tree" model="ir.ui.view">
+        <field name="name">student.training.session.tree</field>
+        <field name="model">student.training.session</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="trainer_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="stage" widget="badge"
+                       decoration-muted="stage == 'draft'"
+                       decoration-info="stage == 'ongoing'"
+                       decoration-success="stage == 'completed'"
+                       decoration-danger="stage == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_training_sessions" model="ir.actions.act_window">
+        <field name="name">Training Sessions</field>
+        <field name="res_model">student.training.session</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_training_root"
+              name="Training Sessions"
+              sequence="10"
+              web_icon="student_training_session,static/description/icon.png"/>
+
+    <menuitem id="menu_training_sessions"
+              parent="menu_training_root"
+              action="action_training_sessions"
+              name="Sessions"
+              sequence="1"/>
+</odoo>

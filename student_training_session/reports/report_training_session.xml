@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_training_session">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="session">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Training Session Report: <span t-field="session.name"/></h2>
+
+                        <div class="row mt32 mb32">
+                            <div class="col-6">
+                                <strong>Session:</strong> <span t-field="session.name"/> (<span t-field="session.stage"/>)
+                                <br/>
+                                <strong>Trainer:</strong> <span t-field="session.trainer_id"/>
+                            </div>
+                            <div class="col-6">
+                                <strong>Start Date:</strong> <span t-field="session.start_date"/>
+                                <br/>
+                                <strong>End Date:</strong> <span t-field="session.end_date"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered mt32">
+                            <thead>
+                                <tr>
+                                    <th align="center">No.</th>
+                                    <th>Student</th>
+                                    <th>Attendance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="sl_no" t-value="1"/>
+                                <t t-foreach="session.attendance_ids" t-as="attendance">
+                                    <tr>
+                                        <td align="center">
+                                            <span t-out="sl_no"/>
+                                            <t t-set="sl_no" t-value="sl_no + 1"/>
+                                        </td>
+                                        <td><span t-field="attendance.student_id"/></td>
+                                        <td>
+                                            <span t-field="attendance.state"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_report_training_session" model="ir.actions.report">
+        <field name="name">Training Session Report</field>
+        <field name="model">student.training.session</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">student_training_session.report_training_session</field>
+        <field name="report_file">student_training_session.report_training_session</field>
+        <field name="binding_model_id" ref="model_student_training_session"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

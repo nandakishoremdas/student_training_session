@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_student_training_session_admin,student.training.session.admin,model_student_training_session,group_training_admin,1,1,1,0
+access_student_training_session_user,student.training.session.user,model_student_training_session,base.group_user,1,1,0,0
+access_student_training_attendance_admin,student.training.attendance.admin,model_student_training_attendance,group_training_admin,1,1,1,0
+access_student_training_attendance_user,student.training.attendance.user,model_student_training_attendance,base.group_user,1,1,1,0
